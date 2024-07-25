@@ -19,28 +19,28 @@
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <link href="{{ asset('/css/style.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('/css/style.member.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('/css/style.admin.css') }}" rel="stylesheet"/>
     <title>Form Login Admin | Toko Helm</title>
 </head>
 <body>
 <div class="login-container">
     <div class="card-login-form">
-        <img src="{{ asset('/assets/images/logo.png') }}" alt="brand-image" class="bottom-space-medium">
-        <p class="font-normal color-dark fw-bold bottom-space-large">Form Login</p>
         <form method="post" class="w-100">
             @csrf
             <div class="form-login">
-                <label for="email" class="form-label d-none"></label>
+                <img src="{{ asset('/assets/images/logo.png') }}" alt="image-logo">
+                <p class="title mb-2">FORM LOGIN ADMIN</p>
+                <label for="username" class="form-label d-none"></label>
                 <div class="text-group-container">
-                    <i class='bx bx-envelope'></i>
-                    <input type="text" placeholder="email" class="text-group-input" id="email"
-                           name="email" aria-describedby="emailHelp">
+                    <i class='bx bx-user'></i>
+                    <input type="text" placeholder="username" class="text-group-input" id="username"
+                           name="username">
                 </div>
                 <label for="password" class="form-label d-none"></label>
                 <div class="text-group-container">
                     <i class='bx bx-lock-alt'></i>
                     <input type="password" placeholder="password" class="text-group-input"
-                           id="password" name="password" aria-describedby="emailHelp">
+                           id="password" name="password">
                 </div>
                 <div class="w-100 d-flex justify-content-end align-items-center">
                     <button type="submit" class="btn-login">Login</button>

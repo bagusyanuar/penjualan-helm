@@ -13,4 +13,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\Web\LoginController::class, 'login'])->name('login');
+Route::match(['post', 'get'],'/', [\App\Http\Controllers\Web\LoginController::class, 'login'])->name('login');
+
+Route::get('/dashboard', [\App\Http\Controllers\Web\DashboardController::class, 'index'])->name('dashboard');
+
+Route::group(['prefix' => 'user'], function (){
+    Route::get('/', [\App\Http\Controllers\Web\UserController::class, 'index'])->name('user');
+    Route::match(['post', 'get'],'/create', [\App\Http\Controllers\Web\UserController::class, 'add'])->name('user.create');
+    Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\UserController::class, 'edit'])->name('user.edit');
+    Route::post('/{id}/delete', [\App\Http\Controllers\Web\UserController::class, 'delete'])->name('user.delete');
+});
+
+Route::group(['prefix' => 'category'], function (){
+    Route::get('/', [\App\Http\Controllers\Web\CategoriesController::class, 'index'])->name('category');
+    Route::match(['post', 'get'],'/create', [\App\Http\Controllers\Web\CategoriesController::class, 'add'])->name('category.create');
+    Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\CategoriesController::class, 'edit'])->name('category.edit');
+    Route::post('/{id}/delete', [\App\Http\Controllers\Web\CategoriesController::class, 'delete'])->name('category.delete');
+});
+
+Route::group(['prefix' => 'product'], function (){
+    Route::get('/', [\App\Http\Controllers\Web\ProductController::class, 'index'])->name('product');
+    Route::match(['post', 'get'],'/create', [\App\Http\Controllers\Web\ProductController::class, 'add'])->name('product.create');
+    Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\ProductController::class, 'edit'])->name('product.edit');
+    Route::post('/{id}/delete', [\App\Http\Controllers\Web\ProductController::class, 'delete'])->name('product.delete');
+});
+
+Route::group(['prefix' => 'shipping'], function (){
+    Route::get('/', [\App\Http\Controllers\Web\ShippingController::class, 'index'])->name('shipping');
+    Route::match(['post', 'get'],'/create', [\App\Http\Controllers\Web\ShippingController::class, 'add'])->name('shipping.create');
+    Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\ShippingController::class, 'edit'])->name('shipping.edit');
+    Route::post('/{id}/delete', [\App\Http\Controllers\Web\ShippingController::class, 'delete'])->name('shipping.delete');
+});
