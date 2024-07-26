@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Helper\CustomController;
-use App\Models\Category;
 use App\Models\Product;
 
-class CategoriesController extends CustomController
+class ProductController extends CustomController
 {
     public function __construct()
     {
@@ -18,7 +17,7 @@ class CategoriesController extends CustomController
     public function index()
     {
         try {
-            $data = Category::with([])
+            $data = Product::with(['category'])
                 ->orderBy('name', 'ASC')
                 ->get();
             return $this->jsonSuccessResponse('success', $data);
@@ -30,25 +29,12 @@ class CategoriesController extends CustomController
     public function findByID($id)
     {
         try {
-            $data = Category::with([])
+            $data = Product::with(['category'])
                 ->where('id', '=', $id)
                 ->first();
             if (!$data) {
                 return $this->jsonNotFoundResponse('item not found...');
             }
-            return $this->jsonSuccessResponse('success', $data);
-        } catch (\Exception $e) {
-            return $this->jsonErrorResponse($e->getMessage());
-        }
-    }
-
-    public function productByCategoryID($id)
-    {
-        try {
-            $data = Product::with([])
-                ->where('category_id', '=', $id)
-                ->orderBy('name', 'ASC')
-                ->get();
             return $this->jsonSuccessResponse('success', $data);
         } catch (\Exception $e) {
             return $this->jsonErrorResponse($e->getMessage());
