@@ -41,8 +41,11 @@ class AuthController extends CustomController
             ];
 
             Customer::create($data_customer);
+            $token = auth('api')->setTTL(null)->tokenById($user->id);
             DB::commit();
-            return $this->jsonSuccessResponse('success');
+            return $this->jsonSuccessResponse('success', [
+                'access_token' => $token
+            ]);
         }catch (\Exception $e) {
             DB::rollBack();
             return $this->jsonErrorResponse($e->getMessage());
