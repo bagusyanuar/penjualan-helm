@@ -10,8 +10,10 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "midtrans/midtrans-php": "^2.5",
         "tymon/jwt-auth": "^2.1",
-        "yajra/laravel-datatables": "10.0"
+        "yajra/laravel-datatables": "10.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

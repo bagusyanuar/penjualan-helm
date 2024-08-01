@@ -9,14 +9,20 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ShippingCity;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CartController extends CustomController
 {
     public function __construct()
     {
         parent::__construct();
+        \Midtrans\Config::$serverKey = config('services.midtrans.serverKey');
+        \Midtrans\Config::$isProduction = config('services.midtrans.isProduction');
+        \Midtrans\Config::$isSanitized = config('services.midtrans.isSanitized');
+        \Midtrans\Config::$is3ds = config('services.midtrans.is3ds');
     }
 
     public function index()
@@ -69,9 +75,11 @@ class CartController extends CustomController
 
     public function checkout()
     {
+
+
         try {
             DB::beginTransaction();
-            $carts = Cart::with([])
+            $carts = Cart::with(['user'])
                 ->where('user_id', '=', auth()->id())
                 ->whereNull('order_id')
                 ->get();
@@ -81,28 +89,46 @@ class CartController extends CustomController
                 return $this->jsonBadRequestResponse('no cart attached');
             }
 
+            $user = User::with([])
+                ->where('id', '=', auth()->id())
+                ->first();
+
+            if (!$user) {
+                return $this->jsonBadRequestResponse('user not found');
+            }
+
+            $username = $user->username;
             $shippingID = $this->postField('shipping_id');
-            $isSent = $this->postField('is_sent');
+            $isSent = '1';
 
             $shippingPrice = 0;
             $shippingAddress = '-';
             $shippingCity = '';
 
-            if ($isSent === '1') {
-                $shipping = ShippingCity::with([])
-                    ->where('id', '=', $shippingID)
-                    ->first();
+//            if ($isSent === '1') {
+            $shipping = ShippingCity::with([])
+                ->where('id', '=', $shippingID)
+                ->first();
 
-                if (!$shipping) {
-                    return $this->jsonNotFoundResponse('shipping not found');
-                }
-
-                $shippingPrice = $shipping->price;
-                $shippingCity = $shipping->city;
-                $shippingAddress = $this->postField('address');
+            if (!$shipping) {
+                return $this->jsonNotFoundResponse('shipping not found');
             }
 
+            $shippingPrice = $shipping->price;
+            $shippingCity = $shipping->city;
+            $shippingAddress = $this->postField('address');
+//            }
+
             $subTotal = $carts->sum('total');
+            $total = ($subTotal + $shippingPrice);
+
+            $resultToken = $this->createToken($total, 'user');
+
+            if ($resultToken['error'] === true) {
+                return $this->jsonErrorResponse('failed create snap token');
+            }
+
+            $snapToken = $resultToken['token'];
             $data_order = [
                 'user_id' => auth()->id(),
                 'date' => Carbon::now()->format('Y-m-d'),
@@ -110,21 +136,24 @@ class CartController extends CustomController
                 'sub_total' => $subTotal,
                 'shipping' => $shippingPrice,
                 'total' => ($subTotal + $shippingPrice),
-                'is_sent' => $this->postField('is_sent'),
+                'is_sent' => true,
                 'shipping_city' => $shippingCity,
                 'shipping_address' => $shippingAddress,
-                'status' => 0
+                'status' => 0,
+                'snap_token' => $snapToken
             ];
             $order = Order::create($data_order);
             $orderID = $order->id;
 
-            foreach ($carts as $cart) {
-                $cart->update([
-                    'order_id' => $orderID
-                ]);
-            }
+//            foreach ($carts as $cart) {
+//                $cart->update([
+//                    'order_id' => $orderID
+//                ]);
+//            }
             DB::commit();
-            return $this->jsonSuccessResponse('success');
+            return $this->jsonSuccessResponse('success', [
+                'snap_token' => $snapToken
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->jsonErrorResponse($e->getMessage());
@@ -136,6 +165,88 @@ class CartController extends CustomController
         try {
             Cart::destroy($id);
             return $this->jsonSuccessResponse('success');
+        } catch (\Exception $e) {
+            return $this->jsonErrorResponse($e->getMessage());
+        }
+    }
+
+    private function createToken($total, $dataUser)
+    {
+        $payload = [
+            'transaction_details' => [
+                'order_id' => 'orders-' . date('YmdHis'),
+                'gross_amount' => $total,
+            ],
+            'customer_details' => [
+                'first_name' => 'user sadean',
+                'email' => 'usersadean@gmail.com',
+            ],
+            'item_details' => [
+                [
+                    'id' => 1,
+                    'price' => $total,
+                    'quantity' => 1,
+                    'name' => 'Order Payment ',
+                    'brand' => 'Sadean Helm',
+                    'category' => 'Helmet',
+                    'merchant_name' => 'Nevermore',
+                ],
+            ],
+        ];
+        $error = true;
+        $token = null;
+        try {
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ' . base64_encode('SB-Mid-server-YavqmAb3nBEECNiaFgfYXFYU') . ':'
+            ])->withBody(json_encode($payload), 'application/json')->post('https://app.sandbox.midtrans.com/snap/v1/transactions');
+            if ($response->successful()) {
+                $bodyString = json_decode($response->body(), true);
+                $token = $bodyString['token'];
+                $error = false;
+            }
+            return [
+                'error' => $error,
+                'token' => $token,
+                'message' => 'oke'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'error' => $error,
+                'token' => $token,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function check_token()
+    {
+        try {
+            $payload = [
+                'transaction_details' => [
+                    'order_id' => 'orders-' . date('YmdHis'),
+                    'gross_amount' => 100000,
+                ],
+                'customer_details' => [
+                    'first_name' => 'joni',
+                    'email' => 'joni@gmail.com',
+                ],
+                'item_details' => [
+                    [
+                        'id' => 1,
+                        'price' => 100000,
+                        'quantity' => 1,
+                        'name' => 'Order Payment ',
+                        'brand' => 'Sadean Helm',
+                        'category' => 'Helmet',
+                        'merchant_name' => 'Nevermore',
+                    ],
+                ],
+            ];
+
+            $snapToken = \Midtrans\Snap::getSnapToken($payload);
+            return $this->jsonSuccessResponse('success', $snapToken);
         } catch (\Exception $e) {
             return $this->jsonErrorResponse($e->getMessage());
         }

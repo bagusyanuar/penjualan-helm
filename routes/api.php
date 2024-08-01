@@ -23,6 +23,7 @@ Route::get('/', function () {
 
 Route::post('/register', [\App\Http\Controllers\API\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\API\AuthController::class, 'login']);
+Route::get('/check-token', [\App\Http\Controllers\API\CartController::class, 'check_token']);
 
 //Ro
 Route::group(['middleware' => ['jwt.verify']], function () {
@@ -40,7 +41,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::group(['prefix' => 'cart'], function (){
         Route::match(['post', 'get'], '/', [\App\Http\Controllers\Api\CartController::class, 'index']);
-        Route::post( '/checkout', [\App\Http\Controllers\Api\CartController::class, 'checkout']);
+        Route::match(['post', 'get'], '/checkout', [\App\Http\Controllers\Api\CartController::class, 'checkout']);
         Route::post('/{id}/delete', [\App\Http\Controllers\Api\CartController::class, 'destroy']);
     });
 
