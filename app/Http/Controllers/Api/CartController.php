@@ -32,6 +32,8 @@ class CartController extends CustomController
                 return $this->store();
             }
             $data = Cart::with(['product'])
+                ->where('user_id', '=', auth()->id())
+                ->whereNull('order_id')
                 ->orderBy('created_at', 'DESC')
                 ->get();
             return $this->jsonSuccessResponse('success', $data);
@@ -75,8 +77,6 @@ class CartController extends CustomController
 
     public function checkout()
     {
-
-
         try {
             DB::beginTransaction();
             $carts = Cart::with(['user'])
@@ -140,19 +140,20 @@ class CartController extends CustomController
                 'shipping_city' => $shippingCity,
                 'shipping_address' => $shippingAddress,
                 'status' => 0,
-                'snap_token' => $snapToken
+                'snap_token' => null
             ];
             $order = Order::create($data_order);
             $orderID = $order->id;
 
-//            foreach ($carts as $cart) {
-//                $cart->update([
-//                    'order_id' => $orderID
-//                ]);
-//            }
+            foreach ($carts as $cart) {
+                $cart->update([
+                    'order_id' => $orderID
+                ]);
+            }
             DB::commit();
             return $this->jsonSuccessResponse('success', [
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken,
+                'order_id' => $orderID
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

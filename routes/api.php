@@ -28,6 +28,10 @@ Route::get('/check-token', [\App\Http\Controllers\API\CartController::class, 'ch
 //Ro
 Route::group(['middleware' => ['jwt.verify']], function () {
 
+    Route::group(['prefix' => 'shipping'], function () {
+        Route::get('/', [\App\Http\Controllers\API\ShippingController::class, 'index']);
+    });
+
     Route::group(['prefix' => 'category'], function () {
         Route::get('/', [\App\Http\Controllers\API\CategoriesController::class, 'index']);
         Route::get('/{id}', [\App\Http\Controllers\API\CategoriesController::class, 'findByID']);
@@ -47,7 +51,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::group(['prefix' => 'order'], function (){
         Route::get('/', [\App\Http\Controllers\Api\OrderController::class, 'index']);
-        Route::get('/{id}', [\App\Http\Controllers\Api\OrderController::class, 'findByID']);
+        Route::match(['post', 'get'],'/{id}', [\App\Http\Controllers\Api\OrderController::class, 'setSuccessPayment']);
     });
 
 });

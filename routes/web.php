@@ -44,3 +44,14 @@ Route::group(['prefix' => 'shipping'], function (){
     Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\ShippingController::class, 'edit'])->name('shipping.edit');
     Route::post('/{id}/delete', [\App\Http\Controllers\Web\ShippingController::class, 'delete'])->name('shipping.delete');
 });
+
+Route::group(['prefix' => 'order'], function (){
+    Route::get('/', [\App\Http\Controllers\Web\OrderController::class, 'index'])->name('order');
+    Route::match(['post', 'get'],'/{id}/pesanan-baru', [\App\Http\Controllers\Web\OrderController::class, 'detail_new'])->name('order.new');
+    Route::match(['post', 'get'],'/{id}/pesanan-packing', [\App\Http\Controllers\Web\OrderController::class, 'detail_packing'])->name('order.packing');
+    Route::match(['post', 'get'],'/{id}/pesanan-di-kirim', [\App\Http\Controllers\Web\OrderController::class, 'detail_sent'])->name('order.sent');
+    Route::match(['post', 'get'],'/{id}/pesanan-selesai', [\App\Http\Controllers\Web\OrderController::class, 'detail_finish'])->name('order.finish');
+//    Route::match(['post', 'get'],'/create', [\App\Http\Controllers\Web\OrderController::class, 'add'])->name('shipping.create');
+//    Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\OrderController::class, 'edit'])->name('shipping.edit');
+//    Route::post('/{id}/delete', [\App\Http\Controllers\Web\OrderController::class, 'delete'])->name('shipping.delete');
+});

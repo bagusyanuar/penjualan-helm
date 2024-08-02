@@ -44,7 +44,7 @@
     <div class="sidebar">
         <div class="sidebar-brand-container">
             <a href="#" class="sidebar-brand">
-                <img src="{{ asset('/assets/images/logo.png') }}" alt="brand-image">
+                <img src="{{ asset('/assets/images/payment-bg.png') }}" alt="brand-image">
 {{--                <p class="color-dark ms-2" style="color: var(--bg-primary);">TOKO HELM</p>--}}
             </a>
         </div>
@@ -83,6 +83,13 @@
                        class="nav-link d-flex align-items-center sidebar-item {{ request()->is('shipping*') ? 'active' : '' }}">
                         <i class='bx bx-car'></i>
                         <p>Shipping Setting</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('order') }}"
+                       class="nav-link d-flex align-items-center sidebar-item {{ request()->is('order*') ? 'active' : '' }}">
+                        <i class='bx bx-shopping-bag'></i>
+                        <p>Pesanan</p>
                     </a>
                 </li>
 {{--                <li class="nav-item">--}}

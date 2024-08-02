@@ -28,6 +28,27 @@ class OrderController extends CustomController
         }
     }
 
+    public function setSuccessPayment($id)
+    {
+        try {
+            $userID = auth()->id();
+            $orders = Order::with([])
+                ->where('user_id', '=', $userID)
+                ->where('id', '=', $id)
+                ->first();
+            if (!$orders) {
+                return $this->jsonNotFoundResponse('transaction not found');
+            }
+
+            $orders->update([
+                'status' => 1
+            ]);
+            return $this->jsonSuccessResponse('success');
+        }catch (\Exception $e) {
+            return $this->jsonErrorResponse($e->getMessage());
+        }
+    }
+
     public function findByID($id)
     {
         try {
