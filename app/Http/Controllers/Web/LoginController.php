@@ -48,5 +48,6 @@ class LoginController extends CustomController
     public function logout()
     {
         Auth::logout();
+        return redirect('/');
     }
 }
