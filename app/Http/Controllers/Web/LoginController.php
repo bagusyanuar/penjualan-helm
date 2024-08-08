@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 
 
 use App\Helper\CustomController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends CustomController
@@ -42,5 +43,10 @@ class LoginController extends CustomController
             return redirect()->back()->with('failed', 'Periksa Kembali Username dan Password Anda');
         }
         return view('login');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
     }
 }

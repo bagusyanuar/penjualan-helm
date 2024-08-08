@@ -36,7 +36,7 @@
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a href="#" class="nav-link navbar-link-item">Logout</a>
+            <a href="{{ route('logout') }}" class="nav-link navbar-link-item">Logout</a>
         </li>
     </ul>
 </nav>
@@ -90,6 +90,27 @@
                        class="nav-link d-flex align-items-center sidebar-item {{ request()->is('order*') ? 'active' : '' }}">
                         <i class='bx bx-shopping-bag'></i>
                         <p>Pesanan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.order') }}"
+                       class="nav-link d-flex align-items-center sidebar-item {{ request()->is('report-order*') ? 'active' : '' }}">
+                        <i class='bx bxs-report'></i>
+                        <p>Laporan Penjualan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.stock') }}"
+                       class="nav-link d-flex align-items-center sidebar-item {{ request()->is('report-stock*') ? 'active' : '' }}">
+                        <i class='bx bxs-report'></i>
+                        <p>Laporan Stok</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.customer') }}"
+                       class="nav-link d-flex align-items-center sidebar-item {{ request()->is('report-customer*') ? 'active' : '' }}">
+                        <i class='bx bxs-report'></i>
+                        <p>Laporan Customer</p>
                     </a>
                 </li>
 {{--                <li class="nav-item">--}}

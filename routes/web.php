@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::match(['post', 'get'],'/', [\App\Http\Controllers\Web\LoginController::class, 'login'])->name('login');
+Route::get('/logout', [\App\Http\Controllers\Web\LoginController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [\App\Http\Controllers\Web\DashboardController::class, 'index'])->name('dashboard');
 
@@ -55,3 +56,7 @@ Route::group(['prefix' => 'order'], function (){
 //    Route::match(['post', 'get'],'/{id}/edit', [\App\Http\Controllers\Web\OrderController::class, 'edit'])->name('shipping.edit');
 //    Route::post('/{id}/delete', [\App\Http\Controllers\Web\OrderController::class, 'delete'])->name('shipping.delete');
 });
+
+Route::get('/report-order', [\App\Http\Controllers\Web\ReportController::class, 'report_order'])->name('report.order');
+Route::get('/report-stock', [\App\Http\Controllers\Web\ReportController::class, 'report_stock'])->name('report.stock');
+Route::get('/report-customer', [\App\Http\Controllers\Web\ReportController::class, 'report_customer'])->name('report.customer');
