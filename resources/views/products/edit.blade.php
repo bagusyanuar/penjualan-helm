@@ -212,13 +212,13 @@
         }
 
         $(document).ready(function () {
-            $('#description').summernote({
-                height: 200,
-                toolbar: [
-                    ['para', ['ul', 'ol']],
-                    ['table', ['table']],
-                ]
-            });
+            // $('#description').summernote({
+            //     height: 200,
+            //     toolbar: [
+            //         ['para', ['ul', 'ol']],
+            //         ['table', ['table']],
+            //     ]
+            // });
             setupDropzone();
         })
     </script>
