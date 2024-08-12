@@ -32,6 +32,23 @@ class ReportController extends CustomController
         return view('laporan.penjualan.index');
     }
 
+    public function print_report_order()
+    {
+        $start = $this->field('start');
+        $end = $this->field('end');
+        $data = Order::with([])
+            ->where('status', '=', 4)
+            ->whereBetween('date', [$start, $end])
+            ->orderBy('updated_at', 'ASC')
+            ->get();
+        return $this->convertToPdf('laporan.penjualan.cetak', [
+            'data' => $data,
+            'start' => $start,
+            'end' => $end
+        ]);
+    }
+
+
     public function report_stock()
     {
         if ($this->request->ajax()) {
@@ -43,6 +60,16 @@ class ReportController extends CustomController
         return view('laporan.stok.index');
     }
 
+    public function print_report_stock()
+    {
+        $data = Product::with(['category'])
+            ->orderBy('qty', 'ASC')
+            ->get();
+        return $this->convertToPdf('laporan.stok.cetak', [
+            'data' => $data,
+        ]);
+    }
+
     public function report_customer()
     {
         if ($this->request->ajax()) {
@@ -51,5 +78,14 @@ class ReportController extends CustomController
             return $this->basicDataTables($data);
         }
         return view('laporan.customer.index');
+    }
+
+    public function print_report_customer()
+    {
+        $data = Customer::with(['user'])
+            ->get();
+        return $this->convertToPdf('laporan.customer.cetak', [
+            'data' => $data,
+        ]);
     }
 }

@@ -14,6 +14,7 @@
     --text-slate-600: rgb(71 85 105);
     --card-border: 12px;
     --bg-accent: #E59D23;
+    --pdf: #B51308;
 }
 
 body {
@@ -387,3 +388,30 @@ table.dataTable td.dt-control:before {
 /*.product-detail-action .btn-shop i {*/
 /*    margin-right: 0.5rem;*/
 /*}*/
+
+.btn-print {
+    background-color: var(--pdf);
+    text-decoration: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    color: whitesmoke;
+    width: fit-content;
+    border: none;
+    outline: none;
+    font-size: 0.8em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    transition: all ease-in-out 200ms;
+    display: flex;
+    align-items: center;
+}
+
+.btn-print:hover {
+    color: whitesmoke;
+    background-color: color-mix(in srgb, var(--pdf) 90%, white);
+}
+
+.btn-print i {
+    line-height: 0;
+    margin-right: 0.25rem;
+}

@@ -16,7 +16,7 @@
 
     <div class="card-content">
         <div class="content-header mb-3">
-            <p class="header-title">Data Pesanan Di Packing</p>
+            <p class="header-title">Data Pesanan</p>
         </div>
         <hr class="custom-divider"/>
         <div class="w-100">
@@ -30,6 +30,10 @@
                 <a href="#" class="btn-add" id="btn-search">
                     <i class='bx bx-search'></i>
                     <span>Cari</span>
+                </a>
+                <a href="#" class="btn-print" id="btn-print">
+                    <i class='bx bx-printer'></i>
+                    <span>Print</span>
                 </a>
             </div>
         </div>
@@ -119,6 +123,18 @@
 
         $(document).ready(function () {
             generateTable();
+
+            $('#btn-search').on('click', function (e) {
+                e.preventDefault();
+                table.ajax.reload();
+            });
+
+            $('#btn-print').on('click', function (e) {
+                e.preventDefault();
+                let start = $('#start').val();
+                let end = $('#end').val();
+                window.open('/report-order/print?start=' + start + '&end=' + end, '_blank');
+            })
         })
     </script>
 @endsection

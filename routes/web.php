@@ -58,5 +58,8 @@ Route::group(['prefix' => 'order'], function (){
 });
 
 Route::get('/report-order', [\App\Http\Controllers\Web\ReportController::class, 'report_order'])->name('report.order');
+Route::get('/report-order/print', [\App\Http\Controllers\Web\ReportController::class, 'print_report_order'])->name('report.order.print');
 Route::get('/report-stock', [\App\Http\Controllers\Web\ReportController::class, 'report_stock'])->name('report.stock');
+Route::get('/report-stock/print', [\App\Http\Controllers\Web\ReportController::class, 'print_report_stock'])->name('report.stock.print');
 Route::get('/report-customer', [\App\Http\Controllers\Web\ReportController::class, 'report_customer'])->name('report.customer');
+Route::get('/report-customer/print', [\App\Http\Controllers\Web\ReportController::class, 'print_report_customer'])->name('report.customer.print');

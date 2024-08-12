@@ -18,6 +18,14 @@
             <p class="header-title">Data Stock Report</p>
         </div>
         <hr class="custom-divider"/>
+        <div class="w-100">
+            <div class="d-flex align-items-center justify-content-end gap-1">
+                <a href="#" class="btn-print" id="btn-print">
+                    <i class='bx bx-printer'></i>
+                    <span>Print</span>
+                </a>
+            </div>
+        </div>
         <table id="table-data" class="display table w-100">
             <thead>
             <tr>
@@ -165,6 +173,11 @@
 
         $(document).ready(function () {
             generateTable();
+
+            $('#btn-print').on('click', function (e) {
+                e.preventDefault();
+                window.open('/report-stock/print', '_blank');
+            })
             // expandRow();
         })
     </script>
