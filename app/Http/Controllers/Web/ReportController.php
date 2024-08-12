@@ -24,6 +24,7 @@ class ReportController extends CustomController
             $end = $this->field('end');
             $data = Order::with([])
                 ->where('status', '=', 4)
+                ->whereBetween('date', [$start, $end])
                 ->orderBy('updated_at', 'ASC')
                 ->get();
             return $this->basicDataTables($data);
