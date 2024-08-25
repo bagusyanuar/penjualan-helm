@@ -25,6 +25,7 @@ class AuthController extends CustomController
             $password = Hash::make($this->postField('password'));
             $name = $this->postField('name');
             $phone = $this->postField('phone');
+            $address = $this->postField('address');
 
             $data_user = [
                 'username' => $username,
@@ -37,7 +38,8 @@ class AuthController extends CustomController
             $data_customer = [
                 'user_id' => $user->id,
                 'name' => $name,
-                'phone' => $phone
+                'phone' => $phone,
+                'address' => $address,
             ];
 
             Customer::create($data_customer);

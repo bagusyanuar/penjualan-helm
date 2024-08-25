@@ -45,8 +45,10 @@ class CategoriesController extends CustomController
     public function productByCategoryID($id)
     {
         try {
+            $param = $this->field('param');
             $data = Product::with([])
                 ->where('category_id', '=', $id)
+                ->where('name', 'LIKE', '%' . $param . '%')
                 ->orderBy('name', 'ASC')
                 ->get();
             return $this->jsonSuccessResponse('success', $data);
